@@ -115,7 +115,7 @@ export default function MapPage() {
     mapUrl = `https://www.google.com/maps/embed/v1/directions?key=${apiKey}&origin=${activeOrigin.lat},${activeOrigin.lng}&destination=${target.lat},${target.lng}&mode=${dirflg}`;
   } else if (isSearching711) {
     const safeName = encodeURIComponent(activeOrigin.name.replace('Mock: ', '').replace(' (Dev Mock)', ''));
-    mapUrl = `https://www.google.com/maps/embed/v1/directions?key=${apiKey}&origin=${activeOrigin.lat},${activeOrigin.lng}&destination=convenience+store+near+${safeName}&mode=walking`;
+    mapUrl = `https://www.google.com/maps/embed/v1/search?key=${apiKey}&q=7-Eleven+near+${safeName}&center=${activeOrigin.lat},${activeOrigin.lng}&zoom=15`;
   } else {
     mapUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${activeOrigin.lat},${activeOrigin.lng}&zoom=16`;
   }
@@ -174,13 +174,48 @@ export default function MapPage() {
 
           <button 
             onClick={() => {
-              setTarget(null);
-              setIsSearching711(true);
+              if (window.google) {
+                const service = new window.google.maps.places.PlacesService(document.createElement('div'));
+                service.nearbySearch({
+                  location: new window.google.maps.LatLng(activeOrigin.lat, activeOrigin.lng),
+                  name: '7-Eleven',
+                  radius: 1500,
+                  type: 'convenience_store'
+                }, (results, status) => {
+                  if (status === window.google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
+                    let nearest = results[0];
+                    let minDist = Infinity;
+                    results.forEach(res => {
+                      if (res.geometry && res.geometry.location) {
+                        const d = getDistanceInMiles(activeOrigin.lat, activeOrigin.lng, res.geometry.location.lat(), res.geometry.location.lng());
+                        if (d < minDist) {
+                          minDist = d;
+                          nearest = res;
+                        }
+                      }
+                    });
+                    
+                    setTarget({ 
+                      lat: nearest.geometry.location.lat(), 
+                      lng: nearest.geometry.location.lng(), 
+                      name: nearest.name 
+                    });
+                    setTravelMode('walking');
+                    setIsSearching711(false);
+                  } else {
+                    setTarget(null);
+                    setIsSearching711(true);
+                  }
+                });
+              } else {
+                setTarget(null);
+                setIsSearching711(true);
+              }
             }}
             className="btn-primary"
             style={{ flex: 1, textAlign: 'center', background: 'var(--accent)', color: 'black', fontWeight: 'bold' }}
           >
-            🏪 Nearest 7-11
+            🏪 Nearest 7-Eleven
           </button>
           
           <div style={{ flex: 1.5, display: 'flex', flexDirection: 'column' }}>

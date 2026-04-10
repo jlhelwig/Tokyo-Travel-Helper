@@ -1,4 +1,4 @@
-export const tokyoData = {
+export const japanData = {
   events: [
     {
       id: 'sanno-matsuri',
@@ -47,6 +47,18 @@ export const tokyoData = {
       category: 'culture',
       mustSee: true,
       time: 'Afternoon/Evening'
+    },
+    {
+      id: 'gion-matsuri-early',
+      name: 'Early Gion Preparations',
+      dates: ['2026-06-25', '2026-06-30'],
+      location: 'Yasaka Shrine, Kyoto',
+      coords: { lat: 35.0037, lng: 135.7785 },
+      hours: { open: 9, close: 18 },
+      description: 'Early signs and preparations for Japan\'s most famous festival in Kyoto.',
+      category: 'festival',
+      mustSee: false,
+      time: 'Daytime'
     }
   ],
   shopping: [
@@ -94,13 +106,25 @@ export const tokyoData = {
       vibe: 'High Energy',
       category: 'anime',
       closedOn: []
+    },
+    {
+      id: 'teramachi-kyoto',
+      name: 'Teramachi Shopping Arcade',
+      location: 'Downtown Kyoto',
+      coords: { lat: 35.0049, lng: 135.7669 },
+      hours: { open: 10, close: 20 },
+      specialty: 'Traditional Goods & Tea',
+      description: 'Historic covered shopping street perfect for rainy days or souvenirs.',
+      vibe: 'Historic/Bustling',
+      category: 'local',
+      closedOn: []
     }
   ],
   food: [
     {
       id: 'tsukiji-jogai',
       name: 'Tsukiji Outer Market',
-      location: 'Tsukiji',
+      location: 'Tsukiji, Tokyo',
       coords: { lat: 35.6655, lng: 139.7684 },
       hours: { open: 5, close: 14 },
       closedOn: [0], // Closed Sundays
@@ -112,7 +136,7 @@ export const tokyoData = {
     {
       id: 'oide-yokochou',
       name: 'Omoide Yokocho (Piss Alley)',
-      location: 'Shinjuku',
+      location: 'Shinjuku, Tokyo',
       coords: { lat: 35.6934, lng: 139.6990 },
       hours: { open: 17, close: 24 },
       specialty: 'Yakitori & Motsunabe',
@@ -123,12 +147,34 @@ export const tokyoData = {
     {
       id: 'ichiran-shibuya',
       name: 'Ichiran Ramen',
-      location: 'Shibuya',
+      location: 'Shibuya, Tokyo',
       coords: { lat: 35.6595, lng: 139.7006 },
       hours: { open: 0, close: 24 }, // Many 24h
       specialty: 'Tonkotsu Ramen',
       description: 'Personalized ramen booths. Great for a quick, focused meal.',
       vibe: 'Minimal/Focused',
+      category: 'local'
+    },
+    {
+      id: 'nishiki-market',
+      name: 'Nishiki Market',
+      location: 'Kyoto',
+      coords: { lat: 35.0050, lng: 135.7649 },
+      hours: { open: 9, close: 18 },
+      specialty: 'Kyoto Street Food',
+      description: 'Known as "Kyoto\'s Kitchen". Five blocks of fresh food and regional specialties.',
+      vibe: 'Market/Bustling',
+      category: 'local'
+    },
+    {
+      id: 'kikunoi-kyoto',
+      name: 'Kikunoi Roan',
+      location: 'Gion, Kyoto',
+      coords: { lat: 35.0016, lng: 135.7725 },
+      hours: { open: 17, close: 21 },
+      specialty: 'Kaiseki (Traditional Course)',
+      description: 'An approachable yet Michelin-starred traditional multi-course dining experience.',
+      vibe: 'Elegant/Traditional',
       category: 'local'
     }
   ],
@@ -149,11 +195,6 @@ export const tokyoData = {
       type: 'food'
     },
     {
-      near: 'Shinjuku',
-      task: 'Find the giant Godzilla head peering over the Shinjuku Toho Building.',
-      type: 'explore'
-    },
-    {
       near: 'Asakusa',
       task: 'Try the melonpan (sweet bread) at Kagetsudo near Senso-ji.',
       type: 'food'
@@ -164,8 +205,18 @@ export const tokyoData = {
       type: 'shopping'
     },
     {
-      near: 'Koenji',
-      task: 'Explore the "pal" and "look" shopping streets for hidden record stores.',
+      near: 'Kyoto',
+      task: 'Walk through the 10,000 torii gates at Fushimi Inari Taisha (Coordinates: 34.9671, 135.7727).',
+      type: 'explore'
+    },
+    {
+      near: 'Kyoto',
+      task: 'See the shining golden pavilion of Kinkaku-ji reflection on the pond (Coordinates: 35.0394, 135.7292).',
+      type: 'explore'
+    },
+    {
+      near: 'Kyoto',
+      task: 'Wander through the towering Arashiyama Bamboo Grove early in the morning (Coordinates: 35.0116, 135.6720).',
       type: 'explore'
     }
   ]

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { tokyoData } from '@/data/tokyoData';
+import { japanData } from '@/data/japanData';
 import { getDistanceInMiles, formatDistance, getStatus } from '@/utils/geo';
 
 export default function MapPage() {
@@ -34,9 +34,9 @@ export default function MapPage() {
 
     // 1. Load Data
     const all = [
-      ...tokyoData.events.map(i => ({...i, type: 'Festival', icon: '🏮'})),
-      ...tokyoData.shopping.map(i => ({...i, type: 'Shop', icon: '🛍️'})),
-      ...tokyoData.food.map(i => ({...i, type: 'Food', icon: '🍜'}))
+      ...japanData.events.map(i => ({...i, type: 'Festival', icon: '🏮'})),
+      ...japanData.shopping.map(i => ({...i, type: 'Shop', icon: '🛍️'})),
+      ...japanData.food.map(i => ({...i, type: 'Food', icon: '🍜'}))
     ];
     setItems(all);
 
@@ -114,7 +114,8 @@ export default function MapPage() {
   if (target) {
     mapUrl = `https://www.google.com/maps/embed/v1/directions?key=${apiKey}&origin=${activeOrigin.lat},${activeOrigin.lng}&destination=${target.lat},${target.lng}&mode=${dirflg}`;
   } else if (isSearching711) {
-    mapUrl = `https://www.google.com/maps/embed/v1/search?key=${apiKey}&q=7-Eleven&center=${activeOrigin.lat},${activeOrigin.lng}&zoom=15`;
+    const safeName = encodeURIComponent(activeOrigin.name.replace('Mock: ', '').replace(' (Dev Mock)', ''));
+    mapUrl = `https://www.google.com/maps/embed/v1/directions?key=${apiKey}&origin=${activeOrigin.lat},${activeOrigin.lng}&destination=convenience+store+near+${safeName}&mode=walking`;
   } else {
     mapUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${activeOrigin.lat},${activeOrigin.lng}&zoom=16`;
   }

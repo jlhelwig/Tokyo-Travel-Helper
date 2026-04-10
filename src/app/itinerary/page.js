@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { tokyoData } from '@/data/tokyoData';
+import { japanData } from '@/data/japanData';
 
 export default function ItineraryPage() {
   const [userState, setUserState] = useState(null);
@@ -32,7 +32,7 @@ export default function ItineraryPage() {
         {dates.map(date => {
           const formattedDate = new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' });
           const userNote = userState?.agenda?.[date];
-          const dailyEvents = tokyoData.events.filter(e => {
+          const dailyEvents = japanData.events.filter(e => {
             const start = new Date(e.dates[0]);
             const end = new Date(e.dates[1] || e.dates[0]);
             const current = new Date(date);

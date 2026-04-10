@@ -1,17 +1,17 @@
 'use client';
 
-import { tokyoData } from '@/data/tokyoData';
+import { japanData } from '@/data/japanData';
 
 export default function FoodPage() {
   return (
     <div className="p-m flex-col gap-m">
       <header>
         <h1 className="glow-text">Local Bites 🍜</h1>
-        <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem' }}>Hidden gems and authentic Tokyo street food.</p>
+        <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem' }}>Hidden gems and authentic street food.</p>
       </header>
 
       <div className="flex-col gap-m">
-        {tokyoData.food.map(f => (
+        {japanData.food.map(f => (
           <div key={f.id} className="premium-card flex-col gap-s">
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <h3>{f.name}</h3>

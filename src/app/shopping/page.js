@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { tokyoData } from '@/data/tokyoData';
+import { japanData } from '@/data/japanData';
 
 export default function ShoppingPage() {
   const [filter, setFilter] = useState('all');
 
   const filteredShopping = filter === 'all' 
-    ? tokyoData.shopping 
-    : tokyoData.shopping.filter(s => s.category === filter);
+    ? japanData.shopping 
+    : japanData.shopping.filter(s => s.category === filter);
 
   return (
     <div className="p-m flex-col gap-m">

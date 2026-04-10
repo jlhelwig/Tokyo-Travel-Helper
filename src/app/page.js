@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { tokyoData } from '@/data/tokyoData';
+import { japanData } from '@/data/japanData';
 import { getDistanceInMiles, formatDistance, getStatus } from '@/utils/geo';
 
 export default function Home() {
@@ -70,7 +70,7 @@ export default function Home() {
     return (
       <div className="p-m flex-col gap-m" style={{ paddingBottom: '100px' }}>
         <h1 className="glow-text" style={{ fontSize: '2.5rem', lineHeight: '1' }}>Konnichiwa! 🗼</h1>
-        <p style={{ color: 'var(--text-dim)' }}>Let's customize your Tokyo experience.</p>
+        <p style={{ color: 'var(--text-dim)' }}>Let's customize your Japan experience.</p>
         
         <form onSubmit={handleSetup} className="flex-col gap-m" style={{ marginTop: '20px' }}>
           <div className="flex-col gap-s">
@@ -113,7 +113,7 @@ export default function Home() {
   const today = new Date('2026-06-01'); // Mock today for the demo
   const todayStr = '2026-06-01';
   
-  const allItems = [...tokyoData.events, ...tokyoData.shopping, ...tokyoData.food];
+  const allItems = [...japanData.events, ...japanData.shopping, ...japanData.food];
   
   // Smart Filter: Focus on what's active/open
   const suggestions = allItems.map(item => {
@@ -124,12 +124,14 @@ export default function Home() {
     }
     return { ...item, status, dist };
   }).filter(item => {
-    // Is it a festival today?
     if (item.dates) {
       const start = new Date(item.dates[0]);
       const end = new Date(item.dates[1] || item.dates[0]);
-      return today >= start && today <= end;
+      if (today < start || today > end) return false;
     }
+    // Location context filter! Only show suggestions within 40 miles of active hotel/gps
+    if (item.dist !== null && item.dist > 40) return false;
+    
     return true; 
   }).sort((a, b) => {
     // Prioritize Open/Opening Soon, then festivals, then distance
@@ -147,9 +149,9 @@ export default function Home() {
       <header className="flex-col">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 'bold' }}>MONDAY, JUNE 1ST</span>
-          <span style={{ background: 'var(--secondary)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 'bold' }}>TESTING IN GINZA</span>
+          <span style={{ background: 'var(--secondary)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 'bold' }}>{isProd ? 'LIVE REGION TRK' : 'DEV MOCK TRK'}</span>
         </div>
-        <h1 style={{ fontSize: '1.8rem' }}>Live in Tokyo</h1>
+        <h1 style={{ fontSize: '1.8rem' }}>Live in Japan</h1>
       </header>
 
       {userState.agenda[todayStr] && (
@@ -212,7 +214,8 @@ export default function Home() {
         <h2 style={{ fontSize: '1rem', color: 'var(--primary)' }}>🕵️ SIDE QUEST NEAR {userState.hotel.toUpperCase()}</h2>
         <div className="premium-card" style={{ borderLeft: '4px solid var(--secondary)' }}>
           <p style={{ fontSize: '0.9rem' }}>
-            {tokyoData.sideQuests.find(q => q.near.toLowerCase().includes(userState.hotel.toLowerCase()))?.task || 
+            {japanData.sideQuests.find(q => q.near.toLowerCase().includes(userState.hotel.toLowerCase()) || 
+                                           userState.hotel.toLowerCase().includes(q.near.toLowerCase()))?.task || 
              "Explore a local convenience store (Konbini) for limited edition seasonal snacks!"}
           </p>
         </div>

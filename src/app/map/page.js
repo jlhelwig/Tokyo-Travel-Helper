@@ -3,8 +3,10 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { japanData } from '@/data/japanData';
 import { getDistanceInMiles, formatDistance, getStatus } from '@/utils/geo';
+import { useOnlineStatus } from '@/utils/useOnlineStatus';
 
 export default function MapPage() {
+  const isOnline = useOnlineStatus();
   const [currentHotel, setCurrentHotel] = useState({ lat: 35.6703, lng: 139.7675, name: 'Loading...' });
   const [isProd, setIsProd] = useState(true);
   const [showSearch, setShowSearch] = useState(false);
@@ -55,7 +57,7 @@ export default function MapPage() {
 
   // 3. Places Autocomplete hook for changing hotel
   useEffect(() => {
-    if (showSearch && inputRef.current && window.google) {
+    if (showSearch && inputRef.current && window.google && isOnline) {
       const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
         fields: ["geometry", "name"],
         componentRestrictions: { country: "JP" }
@@ -81,7 +83,7 @@ export default function MapPage() {
       });
       return () => window.google.maps.event.removeListener(listener);
     }
-  }, [showSearch, isProd]);
+  }, [showSearch, isProd, isOnline]);
 
   // Determine Smart Origin FIRST
   // Use mock position if testing, otherwise real GPS
@@ -146,15 +148,45 @@ export default function MapPage() {
         </p>
       </header>
 
-      <div className="premium-card" style={{ height: '400px', padding: '0', overflow: 'hidden', border: '2px solid var(--primary)', boxShadow: '0 0 15px rgba(0, 242, 255, 0.2)' }}>
-        <iframe 
-          key={`${mapUrl}-${isMocking}`} // Force re-render on origin/mock change
-          width="100%" 
-          height="100%" 
-          style={{ border: 0 }} 
-          src={mapUrl}
-          allowFullScreen
-        ></iframe>
+      <div className="premium-card" style={{ height: '400px', padding: '0', overflow: 'hidden', border: '2px solid var(--primary)', boxShadow: '0 0 15px rgba(0, 242, 255, 0.2)', position: 'relative' }}>
+        {isOnline ? (
+          <iframe 
+            key={`${mapUrl}-${isMocking}`} // Force re-render on origin/mock change
+            width="100%" 
+            height="100%" 
+            style={{ border: 0 }} 
+            src={mapUrl}
+            allowFullScreen
+          ></iframe>
+        ) : (
+          <div style={{ 
+            height: '100%', 
+            width: '100%', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            background: 'linear-gradient(135deg, #1a1a20, #0a0a0c)',
+            padding: '20px',
+            textAlign: 'center'
+          }}>
+            <span style={{ fontSize: '3rem' }}>🚫📡</span>
+            <h3 style={{ color: 'var(--primary)', marginTop: '10px' }}>Map Offline</h3>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-dim)', maxWidth: '250px' }}>
+              Live map tiles and street view require a data connection.
+            </p>
+            {target && (
+              <div className="premium-card" style={{ marginTop: '20px', width: '90%', background: 'var(--glass)' }}>
+                <span style={{ fontSize: '0.6rem', color: 'var(--primary)', fontWeight: 'bold' }}>OFFLINE TARGET:</span>
+                <p style={{ fontSize: '1rem', fontWeight: 'bold' }}>{target.name}</p>
+                <p style={{ fontSize: '0.7rem', opacity: 0.7 }}>{target.lat.toFixed(4)}, {target.lng.toFixed(4)}</p>
+              </div>
+            )}
+            <div style={{ position: 'absolute', bottom: '10px', fontSize: '0.6rem', opacity: 0.5 }}>
+              COORDINATES TRACKED OFFLINE VIA GPS
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex-col gap-m">
@@ -173,6 +205,7 @@ export default function MapPage() {
           </button>
 
           <button 
+            disabled={!isOnline}
             onClick={() => {
               if (window.google) {
                 const service = new window.google.maps.places.PlacesService(document.createElement('div'));
@@ -213,9 +246,16 @@ export default function MapPage() {
               }
             }}
             className="btn-primary"
-            style={{ flex: 1, textAlign: 'center', background: 'var(--accent)', color: 'black', fontWeight: 'bold' }}
+            style={{ 
+              flex: 1, 
+              textAlign: 'center', 
+              background: isOnline ? 'var(--accent)' : '#333', 
+              color: isOnline ? 'black' : '#666', 
+              fontWeight: 'bold',
+              cursor: isOnline ? 'pointer' : 'not-allowed'
+            }}
           >
-            🏪 Nearest 7-Eleven
+            🏪 {isOnline ? 'Nearest 7-Eleven' : '7-11 (Online Only)'}
           </button>
           
           <div style={{ flex: 1.5, display: 'flex', flexDirection: 'column' }}>
@@ -223,18 +263,27 @@ export default function MapPage() {
               <input 
                 ref={inputRef}
                 type="text"
-                placeholder="Search any hotel..."
+                placeholder={isOnline ? "Search any hotel..." : "Search requires WiFi"}
                 className="premium-input-small"
-                style={{ padding: '10px', height: '100%' }}
+                style={{ padding: '10px', height: '100%', background: isOnline ? 'rgba(255,255,255,0.03)' : '#222' }}
                 autoFocus
+                disabled={!isOnline}
               />
             ) : (
               <button 
-                onClick={() => setShowSearch(true)}
+                onClick={() => isOnline && setShowSearch(true)}
                 className="premium-input-small"
-                style={{ padding: '10px', height: '100%', background: 'var(--glass)', border: '1px solid var(--accent)', color: 'white', textAlign: 'left', cursor: 'pointer' }}
+                style={{ 
+                  padding: '10px', 
+                  height: '100%', 
+                  background: isOnline ? 'var(--glass)' : '#222', 
+                  border: isOnline ? '1px solid var(--accent)' : '1px solid #444', 
+                  color: isOnline ? 'white' : '#666', 
+                  textAlign: 'left', 
+                  cursor: isOnline ? 'pointer' : 'not-allowed' 
+                }}
               >
-                🔍 Change Hotel
+                🔍 {isOnline ? 'Change Hotel' : 'Change Hotel (Online)'}
               </button>
             )}
           </div>

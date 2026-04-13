@@ -11,6 +11,7 @@ export const metadata = {
 };
 
 import Script from "next/script";
+import OfflineBanner from "@/components/OfflineBanner";
 
 export default function RootLayout({ children }) {
   const mapApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className={inter.className} suppressHydrationWarning={true}>
+        <OfflineBanner />
         <ServiceWorkerRegister />
         <div className="flex-col" style={{ minHeight: '100vh' }}>
           <main style={{ flex: 1 }}>{children}</main>

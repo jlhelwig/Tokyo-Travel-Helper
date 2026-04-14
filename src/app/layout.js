@@ -1,7 +1,9 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import Script from "next/script";
 import ServiceWorkerRegister from "./ServiceWorkerRegister";
+import OfflineBanner from "@/components/OfflineBanner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -10,8 +12,6 @@ export const metadata = {
   description: "Your local guide for Tokyo, June 2026",
 };
 
-import Script from "next/script";
-import OfflineBanner from "@/components/OfflineBanner";
 
 export default function RootLayout({ children }) {
   const mapApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;

@@ -110,8 +110,8 @@ export default function Home() {
   }
 
   // Dashboard Logic
-  const today = new Date('2026-06-01'); // Mock today for the demo
-  const todayStr = '2026-06-01';
+  const today = isProd ? new Date() : new Date('2026-06-01'); // Real date in prod, mock June 1st in dev
+  const todayStr = today.toISOString().split('T')[0];
   
   const allItems = [...japanData.events, ...japanData.shopping, ...japanData.food];
   
@@ -148,7 +148,7 @@ export default function Home() {
     <div className="p-m flex-col gap-m" style={{ paddingBottom: '100px' }}>
       <header className="flex-col">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 'bold' }}>MONDAY, JUNE 1ST</span>
+          <span style={{ color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 'bold' }}>{today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).toUpperCase()}</span>
           <span style={{ background: 'var(--secondary)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 'bold' }}>{isProd ? 'LIVE REGION TRK' : 'DEV MOCK TRK'}</span>
         </div>
         <h1 style={{ fontSize: '1.8rem' }}>Live in Japan</h1>

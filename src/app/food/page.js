@@ -27,10 +27,11 @@ export default function FoodPage() {
         ))}
       </div>
 
-      <section className="premium-card" style={{ background: 'linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url("https://images.unsplash.com/photo-1542371923-b903e0544520?auto=format&fit=crop&q=80&w=800")' }}>
+      <section className="premium-card" style={{ background: 'linear-gradient(135deg, rgba(0,242,255,0.05), rgba(112,0,255,0.05))', border: '1px solid var(--accent)' }}>
         <h3 style={{ color: 'var(--primary)' }}>Pro Tip</h3>
         <p style={{ fontSize: '0.85rem' }}>Look for long queues of locals in suits - that's usually where the best and most affordable lunch spots are!</p>
       </section>
+
     </div>
   );
 }
